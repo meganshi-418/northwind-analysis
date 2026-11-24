@@ -1,12 +1,8 @@
-"""Northwind business analysis: reproduces every number, table and figure on the webpage.
+"""Analyze the Northwind dataset for the HW3 webpage.
 
-Usage:
-    python analysis.py
-
-Inputs:  data/Northwind Database.xlsx
-Outputs: docs/figures/*.png  (charts used on the webpage)
-         outputs/*.csv       (tables behind each chart)
-         outputs/results.json (headline numbers quoted on the webpage)
+Running ``python analysis.py`` reads ``data/Northwind Database.xlsx``
+and writes the charts to ``docs/figures/``, the tables to
+``outputs/*.csv`` and the headline numbers to ``outputs/results.json``.
 """
 
 import json
@@ -39,10 +35,19 @@ money = mtick.FuncFormatter(lambda v, _: f"${v/1000:,.0f}k")
 
 
 def load_data(path=DATA):
-    """Load the Northwind workbook and return a dict of DataFrames plus an order-line fact table.
+    """Load the workbook and build an order-line fact table.
 
-    Revenue per line = UnitPrice * Quantity * (1 - Discount), using the price actually
-    charged on the order (not the current list price in the Product sheet).
+    Line revenue is ``UnitPrice * Quantity * (1 - Discount)`` using the
+    price charged on the order, not the Product sheet's list price.
+
+    Args:
+        path (pathlib.Path | str): Northwind Excel workbook.
+
+    Returns:
+        tuple[dict[str, pandas.DataFrame], pandas.DataFrame]: Every
+        sheet keyed by sheet name, and one row per order line joined
+        to its order, product, category and customer, with added
+        ``gross``, ``revenue`` and ``discount_amt`` columns.
     """
     x = pd.read_excel(path, sheet_name=None)
     orders = x["Orders"]
@@ -64,7 +69,20 @@ def load_data(path=DATA):
 
 
 def check_data(x, fact):
-    """Sanity checks so the reader knows the joins are complete and the period is understood."""
+    """Summarize row counts, date range and join completeness.
+
+    Args:
+        x (dict[str, pandas.DataFrame]): Sheets from ``load_data``.
+        fact (pandas.DataFrame): Order-line table from ``load_data``.
+
+    Returns:
+        dict[str, int | float | str]: Counts of orders, lines,
+        customers and unshipped orders, first and last order dates,
+        lines missing a product or order, and total net revenue.
+
+    Raises:
+        AssertionError: If any order line lacks a product or order.
+    """
     o = x["Orders"]
     checks = {
         "orders": int(len(o)),
@@ -83,11 +101,20 @@ def check_data(x, fact):
 
 # ---------------------------------------------------------------- Q1 markets
 def q1_market_momentum(fact):
-    """Which country markets are growing or shrinking?
+    """Compare country revenue for Jan-Apr 1997 and Jan-Apr 1998.
 
-    The data ends on 1998-05-06, so calendar 1998 is partial. To compare like with like we
-    use Jan 1 - Apr 30 of 1997 vs the same four months of 1998 (May 1998 is excluded because
-    it has only six days).
+    1998 ends on May 6, so only January-April of each year is
+    compared. Writes ``q1_country_momentum.csv`` and
+    ``q1_market_momentum.png``.
+
+    Args:
+        fact (pandas.DataFrame): Order-line table from ``load_data``.
+
+    Returns:
+        dict[str, Any]: Jan-Apr revenue for both years, total growth
+        in percent, the three largest gainers by USD change, their
+        share of total growth in percent, and every declining country
+        with its USD change.
     """
     f = fact.copy()
     f["month"] = f.OrderDate.dt.to_period("M")
@@ -136,10 +163,23 @@ def q1_market_momentum(fact):
 
 # ---------------------------------------------------------------- Q2 customers
 def q2_customer_concentration(fact, as_of="1998-05-06"):
-    """How dependent is revenue on a few customers, and which big accounts look at risk?
+    """Measure revenue concentration and flag lapsed customers.
 
-    'At risk' = a top-20 customer (by lifetime revenue) whose last order is more than 90 days
-    before the last date in the data. Median gap between orders is reported for context.
+    A customer is lapsed when its last order is more than 90 days
+    before ``as_of``; "at risk" means lapsed and in the top 20 by
+    lifetime revenue. Writes ``q2_top20_customers.csv`` and
+    ``q2_customer_concentration.png``.
+
+    Args:
+        fact (pandas.DataFrame): Order-line table from ``load_data``.
+        as_of (str | pandas.Timestamp): Date recency is measured from;
+            the default is the last order date in the data.
+
+    Returns:
+        dict[str, Any]: Customer count, top-10 and top-20 revenue
+        share in percent, median days between orders, the at-risk
+        top-20 customers with their revenue share, and the count,
+        revenue and share of all lapsed customers.
     """
     as_of = pd.Timestamp(as_of)
     cust = fact.groupby(["CustomerID", "CompanyName", "Country"]).agg(
@@ -210,12 +250,21 @@ def q2_customer_concentration(fact, as_of="1998-05-06"):
 
 # ---------------------------------------------------------------- Q3 discounts
 def q3_discount_effect(fact):
-    """Do discounts buy larger orders, or just give money away?
+    """Compare units per line at each discount level.
 
-    Discounted lines are compared with undiscounted lines of the SAME product, so the
-    comparison is not distorted by product mix: for each product we compute the ratio
-    (mean quantity at discount level d) / (mean quantity at 0% discount).
-    Discount levels 1-6% (8 lines total) are grouped as 'other' and excluded from the chart.
+    Each line is indexed to the same product's mean quantity at 0%
+    discount, so product mix does not bias the comparison. Lines
+    with discounts other than 0, 5, 10, 15, 20 or 25% are dropped.
+    Writes ``q3_discount_levels.csv`` and ``q3_discount_effect.png``.
+
+    Args:
+        fact (pandas.DataFrame): Order-line table from ``load_data``.
+
+    Returns:
+        dict[str, Any]: Share of lines discounted, total discount in
+        USD and as a percent of gross sales, average quantity lift
+        for all discounted lines and per level (percent), and the USD
+        kept if discounts above 5% had been 5% at equal quantities.
     """
     f = fact.copy()
     f["level"] = f.Discount.round(2).map({0: "0%", .05: "5%", .10: "10%", .15: "15%", .20: "20%", .25: "25%"})
@@ -273,10 +322,23 @@ def q3_discount_effect(fact):
 
 # ---------------------------------------------------------------- Q4 fulfilment
 def q4_fulfilment(x, fact):
-    """Where does fulfilment break down: late shipments by shipper and by sales employee.
+    """Break down late shipments by delivery window, shipper and rep.
 
-    Late = ShippedDate after RequiredDate. Unshipped orders (no ShippedDate) are reported
-    separately and excluded from the late rate.
+    An order is late when ``ShippedDate`` is after ``RequiredDate``.
+    Unshipped orders are excluded from all rates. Writes
+    ``q4_by_shipper.csv``, ``q4_by_employee.csv``,
+    ``q4_by_promised_window.csv`` and ``q4_fulfilment.png``.
+
+    Args:
+        x (dict[str, pandas.DataFrame]): Sheets from ``load_data``.
+        fact (pandas.DataFrame): Order-line table from ``load_data``.
+
+    Returns:
+        dict[str, Any]: Shipped and unshipped counts, overall late
+        rate, late rate by shipper and by promised window (percent),
+        14-day order count and share of late orders, late stats for
+        the employee with the highest late rate, value of late orders
+        in USD, and median days to ship for late and on-time orders.
     """
     o = x["Orders"].merge(x["Shippers"], left_on="ShipVia", right_on="ShipperID")
     e = x["Employees"].assign(Employee=lambda d: d.FirstName + " " + d.LastName)
@@ -289,6 +351,16 @@ def q4_fulfilment(x, fact):
     shipped["order_value"] = shipped.OrderID.map(val)
 
     def summarise(col):
+        """Summarize shipped orders for each value of a column.
+
+        Args:
+            col (str): Column of ``shipped`` to group by.
+
+        Returns:
+            pandas.DataFrame: Order count, late rate, median days to
+            ship, mean freight and late order value per group,
+            sorted by late rate, highest first.
+        """
         return shipped.groupby(col).agg(
             orders=("OrderID", "size"),
             late_rate=("late", "mean"),
@@ -371,10 +443,27 @@ def q4_fulfilment(x, fact):
 
 # ---------------------------------------------------------------- Q5 inventory
 def q5_inventory_risk(x, fact, as_of="1998-05-06"):
-    """Which active products will stock out soon, and which tie up cash?
+    """Flag active products at risk of stock-out or overstock.
 
-    Demand = average units sold per week over the last 13 weeks of data (Feb 4 - May 6 1998).
-    Weeks of cover = (UnitsInStock + UnitsOnOrder) / weekly demand. Discontinued products are excluded.
+    Weekly demand is units sold in the 13 weeks before ``as_of``
+    divided by 13. Stock-out risk means under 4 weeks of cover
+    including units on order; overstock means over 26 weeks of
+    on-hand cover. Discontinued products are excluded. Writes
+    ``q5_stockout_risk.csv``, ``q5_overstock.csv`` and
+    ``q5_inventory_risk.png``.
+
+    Args:
+        x (dict[str, pandas.DataFrame]): Sheets from ``load_data``.
+        fact (pandas.DataFrame): Order-line table from ``load_data``.
+        as_of (str | pandas.Timestamp): End of the 13-week demand
+            window; the default is the last order date in the data.
+
+    Returns:
+        dict[str, Any]: Counts and recent revenue of at-risk
+        products, how many are above their reorder level or have a
+        reorder level of 0, their median weeks of cover, the
+        overstock count and list-price value, product name lists,
+        and the full at-risk table as records.
     """
     as_of = pd.Timestamp(as_of)
     start = as_of - pd.Timedelta(weeks=13)
@@ -436,7 +525,14 @@ def q5_inventory_risk(x, fact, as_of="1998-05-06"):
 
 
 def main():
-    """Run all five analyses and write figures, tables and results.json."""
+    """Run all analyses and save figures, tables and results.json.
+
+    Args:
+        None.
+
+    Returns:
+        None. Also prints the results JSON to stdout.
+    """
     FIG.mkdir(parents=True, exist_ok=True)
     OUT.mkdir(parents=True, exist_ok=True)
     x, fact = load_data()
