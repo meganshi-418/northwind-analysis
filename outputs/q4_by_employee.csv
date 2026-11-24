@@ -1,0 +1,10 @@
+Employee,orders,late_rate,median_days_to_ship,avg_freight,late_value,rush_share,late_orders
+Anne Dodsworth,42,0.095,7.0,78.455,6494.9,0.143,4
+Margaret Peacock,151,0.066,7.0,72.758,23618.23,0.113,10
+Robert King,69,0.058,7.0,95.141,5331.51,0.029,4
+Michael Suyama,65,0.046,7.0,57.026,1763.625,0.062,3
+Andrew Fuller,93,0.043,7.0,90.857,14089.4,0.097,4
+Laura Callahan,100,0.04,6.0,73.867,4405.7,0.07,4
+Janet Leverling,127,0.039,7.0,85.707,6049.25,0.071,5
+Steven Buchanan,42,0.024,6.5,93.303,516.0,0.095,1
+Nancy Davolio,120,0.017,6.5,73.018,4267.0,0.083,2

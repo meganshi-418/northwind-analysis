@@ -1,0 +1,4 @@
+CompanyName,orders,late_rate,median_days_to_ship,avg_freight,late_value
+United Package,315,0.051,7.0,87.482,29758.76
+Speedy Express,245,0.049,7.0,65.45,19697.63
+Federal Shipping,249,0.036,6.0,81.78,17079.225

@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Northwind Traders: Five Questions for Management</title>
+<style>
+  :root { --ink:#1d2733; --muted:#5b6673; --line:#e3e7ec; --accent:#2a6fb0; --bg:#fafbfc; --warn:#c0392b; }
+  * { box-sizing: border-box; }
+  body { margin:0; font: 16px/1.6 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; color:var(--ink); background:var(--bg); }
+  header { background:#fff; border-bottom:1px solid var(--line); }
+  .wrap { max-width: 1040px; margin: 0 auto; padding: 0 24px; }
+  header .wrap { padding-top: 48px; padding-bottom: 32px; }
+  h1 { font-size: 2rem; line-height:1.2; margin:0 0 8px; }
+  .sub { color:var(--muted); margin:0; max-width: 760px; }
+  nav { margin-top: 20px; display:flex; flex-wrap:wrap; gap:8px; }
+  nav a { font-size:.9rem; text-decoration:none; color:var(--accent); border:1px solid var(--line); border-radius:999px; padding:4px 12px; background:#fff; }
+  .summary { background:#fff; border:1px solid var(--line); border-radius:10px; padding:20px 24px; margin:32px 0; }
+  .summary h2 { margin-top:0; font-size:1.2rem; }
+  .summary ol { margin:0; padding-left: 20px; }
+  .summary li { margin: 6px 0; }
+  section.q { background:#fff; border:1px solid var(--line); border-radius:10px; padding:28px 28px 20px; margin: 28px 0; }
+  .qnum { font-size:.8rem; font-weight:700; letter-spacing:.06em; color:var(--accent); text-transform:uppercase; }
+  section.q h2 { margin: 4px 0 16px; font-size:1.45rem; line-height:1.3; }
+  h3 { font-size:.95rem; text-transform:uppercase; letter-spacing:.04em; color:var(--muted); margin: 22px 0 6px; }
+  figure { margin: 16px 0; }
+  figure img { width:100%; height:auto; border:1px solid var(--line); border-radius:6px; background:#fff; }
+  figcaption { font-size:.85rem; color:var(--muted); margin-top:6px; }
+  .finding { border-left: 4px solid var(--accent); background:#f2f7fc; padding: 12px 16px; border-radius: 0 6px 6px 0; }
+  .implication { border-left: 4px solid #2e8b57; background:#f1f9f4; padding: 12px 16px; border-radius: 0 6px 6px 0; }
+  .caveat { font-size:.9rem; color:var(--muted); }
+  table { border-collapse: collapse; width:100%; font-size:.9rem; margin: 8px 0; }
+  th, td { text-align:left; padding:6px 10px; border-bottom:1px solid var(--line); }
+  th { color:var(--muted); font-weight:600; }
+  td.n, th.n { text-align:right; font-variant-numeric: tabular-nums; }
+  .kpis { display:grid; grid-template-columns: repeat(auto-fit, minmax(180px,1fr)); gap:12px; margin: 16px 0; }
+  .kpi { border:1px solid var(--line); border-radius:8px; padding:12px 14px; }
+  .kpi b { display:block; font-size:1.5rem; }
+  .kpi span { font-size:.85rem; color:var(--muted); }
+  footer { color:var(--muted); font-size:.85rem; padding: 24px 0 48px; }
+  a { color: var(--accent); }
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <h1>Northwind Traders: Five Questions for Management</h1>
+    <p class="sub">An analysis of 830 orders (2,155 order lines, $1.27M net revenue) placed by 89 customers in 21 countries between July 4, 1996 and May 6, 1998. Every number and chart on this page comes from <code>analysis.py</code> in the <a href="#repo">project repository</a>.</p>
+    <nav>
+      <a href="#q1">1 · Markets</a><a href="#q2">2 · Customers</a><a href="#q3">3 · Discounts</a><a href="#q4">4 · Late shipments</a><a href="#q5">5 · Inventory</a><a href="#method">Data &amp; method</a>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <div class="summary">
+    <h2>Summary for the manager</h2>
+    <ol>
+      <li><b>The business is growing fast:</b> revenue for Jan–Apr 1998 was 121% higher than for Jan–Apr 1997. The USA, Germany and Brazil produced 57% of that growth. The only shrinking markets (Denmark, Canada, Mexico, Finland) shrank because individual customers stopped ordering, not because whole markets fell.</li>
+      <li><b>Revenue depends on a few accounts:</b> the top 20 customers bring in 63% of revenue. 16 customers worth 9% of lifetime revenue have not ordered in over 90 days, and they can be named and called.</li>
+      <li><b>Discounts above 5% buy nothing extra:</b> a 5% discount comes with as large a jump in order size as a 25% one. Capping discounts at 5% would have kept about $58k (4.6% of revenue).</li>
+      <li><b>Late shipments come mostly from 14-day "rush" promises:</b> these are 8% of orders but 32% of late shipments. The choice of shipper matters much less.</li>
+      <li><b>Stock-outs are coming:</b> 27 of 69 active products have less than 4 weeks of stock at current demand. 21 of them are still above their reorder level, so the current reorder rules will not catch them.</li>
+    </ol>
+  </div>
+
+  <!-- ===================== Q1 ===================== -->
+  <section class="q" id="q1">
+    <div class="qnum">Question 1</div>
+    <h2>Which country markets are growing or shrinking, and where should sales attention go?</h2>
+
+    <h3>Why it matters</h3>
+    <p>Sales staff and marketing money are limited. Knowing which markets drive growth and which are slipping tells the manager where to add people and where to step in before losing ground.</p>
+
+    <h3>Approach</h3>
+    <p>Net revenue per order line = unit price × quantity × (1 − discount). The data stops on May 6, 1998, so calendar 1998 is incomplete. Comparing full-year 1997 with part-year 1998 would make every market look like it was shrinking. Instead I compare the same four months, <b>January–April 1997 vs. January–April 1998</b>, country by country. The few days of May 1998 are left out.</p>
+
+    <figure>
+      <img src="figures/q1_market_momentum.png" alt="Left: monthly revenue line chart rising from about $28k in July 1996 to $124k in April 1998. Right: bar chart of revenue change by country, with the USA, Germany and Brazil gaining most and Denmark, Canada, Mexico and Finland declining.">
+      <figcaption>Figure 1. Left: monthly net revenue. Right: change in net revenue by ship-to customer country, Jan–Apr 1998 vs. Jan–Apr 1997. Table: <code>outputs/q1_country_momentum.csv</code>.</figcaption>
+    </figure>
+
+    <div class="kpis">
+      <div class="kpi"><b>$191k → $422k</b><span>Jan–Apr revenue, 1997 → 1998 (+121%)</span></div>
+      <div class="kpi"><b>57%</b><span>of the growth came from the USA, Germany and Brazil</span></div>
+      <div class="kpi"><b>4 of 21</b><span>countries shrank (Denmark −69%, Canada −24%, Mexico −44%, Finland −45%)</span></div>
+    </div>
+
+    <h3>Main finding</h3>
+    <p class="finding">Growth sped up sharply from late 1997. Every month of 1998 so far beats every month of 1996–97. Most of it comes from three large markets: the <b>USA (+$53k)</b>, <b>Germany (+$47k)</b> and <b>Brazil (+$32k)</b>. The declines are small and each one traces back to a single account. In Denmark, Simons bistro ordered $11.2k in Jan–Apr 1997 and nothing in Jan–Apr 1998. In Canada, Mère Paillarde ordered $10.4k and then stopped, while Bottom-Dollar Markets more than doubled.</p>
+
+    <h3>Business implication</h3>
+    <p class="implication">Put extra sales capacity into the USA, Germany and Brazil, where demand is clearly growing. Sweden (12×), Ireland (3.5×) and the UK (3×) grew fastest from a small base and are worth a closer look. The shrinking markets do not need a market-level strategy. They need someone to call the specific customers who went quiet (see Question 2).</p>
+  </section>
+
+  <!-- ===================== Q2 ===================== -->
+  <section class="q" id="q2">
+    <div class="qnum">Question 2</div>
+    <h2>How dependent is Northwind on a few customers, and which valuable customers are drifting away?</h2>
+
+    <h3>Why it matters</h3>
+    <p>If a few customers produce most of the revenue, losing one of them hurts a lot. Spotting the large accounts that have stopped ordering lets the sales team act while the relationship can still be saved.</p>
+
+    <h3>Approach</h3>
+    <p>I ranked customers by lifetime net revenue and plotted the cumulative share (a Pareto curve). For recency I measured days from each customer's last order to the last date in the data (May 6, 1998). The typical gap between a customer's orders is 35 days (median), so <b>more than 90 days without an order</b>, about 2.5 normal gaps, is used as the "at risk" signal.</p>
+
+    <figure>
+      <img src="figures/q2_customer_concentration.png" alt="Left: cumulative revenue curve showing the top 10 customers at 45% and the top 20 at 63% of revenue. Right: days since last order for the top 20 customers. Only Mère Paillarde exceeds 90 days, at 188 days.">
+      <figcaption>Figure 2. Left: cumulative share of revenue by customer rank. Right: days since last order for the 20 largest customers. Table: <code>outputs/q2_top20_customers.csv</code>.</figcaption>
+    </figure>
+
+    <div class="kpis">
+      <div class="kpi"><b>45% / 63%</b><span>of revenue from the top 10 / top 20 of 89 customers</span></div>
+      <div class="kpi"><b>16 customers</b><span>with no order in 90+ days, worth $114k (9.0%) of lifetime revenue</span></div>
+      <div class="kpi"><b>188 days</b><span>since Mère Paillarde (top-20 account, $28.9k lifetime) last ordered</span></div>
+    </div>
+
+    <h3>Main finding</h3>
+    <p class="finding">Revenue is moderately concentrated: 20 customers (22% of the base) produce 63% of it. The good news is that 19 of the top 20 have ordered within the last 63 days. The one exception, <b>Mère Paillarde</b> (Canada, $28.9k lifetime), has been silent for 188 days, which by itself explains most of Canada's decline in Question 1. Further down the list, 16 customers in total have gone more than 90 days without an order.</p>
+
+    <h3>Business implication</h3>
+    <p class="implication">Assign a named account owner to each top-20 customer and set an alert for any of them that goes 60–90 days without ordering. Start a win-back call this month with Mère Paillarde and Simons bistro. Use the 16-customer lapsed list (from the script) as a re-engagement campaign list.</p>
+  </section>
+
+  <!-- ===================== Q3 ===================== -->
+  <section class="q" id="q3">
+    <div class="qnum">Question 3</div>
+    <h2>Do discounts lead to larger orders, or do they mostly give away revenue?</h2>
+
+    <h3>Why it matters</h3>
+    <p>Discounts are given on 39% of order lines and cost $88.7k (6.5% of gross sales). If larger discounts do not bring larger orders, part of that money is being given away for nothing.</p>
+
+    <h3>Approach</h3>
+    <p>Comparing raw averages across discount levels can mislead, because some products sell in bigger quantities than others. So for each product I computed its average units per line at <b>0% discount</b>, then measured how many more units it sold at each discount level (5%, 10%, 15%, 20%, 25%). Eight lines with odd discounts of 1–6% were left out. I also estimated how much revenue would have been kept if every discount above 5% had been 5% instead, assuming the same quantities.</p>
+
+    <figure>
+      <img src="figures/q3_discount_effect.png" alt="Left: box plots of units per order line by discount level. Medians are about 18 units at 0% and 20 to 25 units at all discount levels. Right: bars showing units versus the same product at 0% discount: +33% at 5%, +26% at 10%, +36% at 15%, +32% at 20% and +41% at 25%.">
+      <figcaption>Figure 3. Left: distribution of units per order line (outliers hidden; diamonds = mean). Right: average units per line compared with the same product sold without a discount. Table: <code>outputs/q3_discount_levels.csv</code>.</figcaption>
+    </figure>
+
+    <table>
+      <thead><tr><th>Discount</th><th class="n">Order lines</th><th class="n">Avg units / line</th><th class="n">Units vs. same product at 0%</th><th class="n">Discount given</th></tr></thead>
+      <tbody>
+        <tr><td>0%</td><td class="n">1,317</td><td class="n">21.7</td><td class="n">—</td><td class="n">$0</td></tr>
+        <tr><td>5%</td><td class="n">185</td><td class="n">28.0</td><td class="n">+33%</td><td class="n">$7,769</td></tr>
+        <tr><td>10%</td><td class="n">173</td><td class="n">25.2</td><td class="n">+26%</td><td class="n">$10,167</td></tr>
+        <tr><td>15%</td><td class="n">157</td><td class="n">28.4</td><td class="n">+36%</td><td class="n">$15,442</td></tr>
+        <tr><td>20%</td><td class="n">161</td><td class="n">27.0</td><td class="n">+32%</td><td class="n">$22,295</td></tr>
+        <tr><td>25%</td><td class="n">154</td><td class="n">28.2</td><td class="n">+41%</td><td class="n">$32,980</td></tr>
+      </tbody>
+    </table>
+
+    <h3>Main finding</h3>
+    <p class="finding">Discounted lines are about a third larger than undiscounted lines of the same product. But the increase is <b>almost the same at 5% as at 25%</b> (+33% vs. +41%), while the cost grows fourfold: the 20% and 25% tiers alone cost $55k. Going beyond 5% brings little or no extra volume.</p>
+
+    <h3>Business implication</h3>
+    <p class="implication">Make 5% the standard discount and require manager approval above it. Had that rule applied over this period, Northwind would have kept about <b>$58k</b> (4.6% of net revenue), assuming the same quantities. Pilot the rule with a few sales reps before rolling it out.</p>
+    <p class="caveat">Caveat: this is observational data. Reps may give big discounts <i>because</i> an order is already large, so the cause can run the other way. The flat increase across tiers still suggests the extra discount points do not drive the extra volume. A controlled pilot is the right way to confirm it.</p>
+  </section>
+
+  <!-- ===================== Q4 ===================== -->
+  <section class="q" id="q4">
+    <div class="qnum">Question 4</div>
+    <h2>Where do late shipments come from: the shipper, the sales rep, or the promise made to the customer?</h2>
+
+    <h3>Why it matters</h3>
+    <p>A late shipment hurts the relationship with exactly the customers Question 2 says we cannot afford to lose. Fixing it requires knowing whether the problem lies with a carrier, an employee, or the delivery date we promise.</p>
+
+    <h3>Approach</h3>
+    <p>An order counts as late when its shipped date is after its required date. The 21 orders not yet shipped are left out. I compared late rates across three possible causes: the promised delivery window (required date minus order date, which is always 14, 28 or 42 days), the shipping company, and the employee who took the order. Labels show raw counts so that small groups are not over-read.</p>
+
+    <figure>
+      <img src="figures/q4_fulfilment.png" alt="Three bar charts. Late rate by promised window: 17.6% for 14 days, 3.7% for 28 days, 0% for 42 days. By shipper: United Package 5.1%, Speedy Express 4.9%, Federal Shipping 3.6%. By employee: Anne Dodsworth 9.5% (4 of 42) highest, Nancy Davolio 1.7% lowest, company average 4.6%.">
+      <figcaption>Figure 4. Share of shipped orders that shipped after the required date. Tables: <code>outputs/q4_by_promised_window.csv</code>, <code>q4_by_shipper.csv</code>, <code>q4_by_employee.csv</code>.</figcaption>
+    </figure>
+
+    <div class="kpis">
+      <div class="kpi"><b>4.6%</b><span>of 809 shipped orders were late ($66.5k of order value)</span></div>
+      <div class="kpi"><b>17.6% vs 3.7%</b><span>late rate on 14-day vs. 28-day promises</span></div>
+      <div class="kpi"><b>8% → 32%</b><span>rush orders' share of all orders vs. their share of late orders</span></div>
+    </div>
+
+    <h3>Main finding</h3>
+    <p class="finding">The <b>promised window</b> is the strongest driver by far. Orders promised within 14 days are late almost <b>five times as often</b> as 28-day orders, and no 42-day order was ever late. Shippers differ only slightly (3.6%–5.1%). Differences between employees are partly a rush-order effect: the two reps with the highest late rates (Anne Dodsworth and Margaret Peacock) also have the largest share of 14-day orders (14% and 11%, vs. 8% company-wide). Anne's 9.5% rests on only 4 late orders, too few to blame on performance. When orders are late, they are very late: a median of 30 days from order to shipment, against 7 days for on-time orders.</p>
+
+    <h3>Business implication</h3>
+    <p class="implication">Stop treating lateness as a carrier problem. Accept a 14-day promise only when the items are confirmed in stock (this ties into Question 5) and flag rush orders for priority picking. Shifting more volume to Federal Shipping is a cheap secondary step. Do not discipline individual reps on this evidence.</p>
+  </section>
+
+  <!-- ===================== Q5 ===================== -->
+  <section class="q" id="q5">
+    <div class="qnum">Question 5</div>
+    <h2>Which products are about to run out, and are the current reorder rules catching them?</h2>
+
+    <h3>Why it matters</h3>
+    <p>Demand has roughly doubled (Question 1). Stock levels and reorder points set for the old demand level will lead to stock-outs, lost sales and more late shipments.</p>
+
+    <h3>Approach</h3>
+    <p>For each of the 69 products that are not discontinued, I estimated current weekly demand as the units sold over the last 13 weeks of data (Feb 4 – May 6, 1998) divided by 13. <b>Weeks of cover</b> = (units in stock + units on order) ÷ weekly demand. Products under 4 weeks are flagged, and I checked whether each one is still above its reorder level, meaning the existing rule would not yet trigger a reorder. The stock figures are treated as a snapshot taken at the end of the order history.</p>
+
+    <figure>
+      <img src="figures/q5_inventory_risk.png" alt="Two aligned bar charts for the 15 highest-revenue products with under 4 weeks of cover. Left: last-13-week revenue, led by Côte de Blaye at $34k. Right: weeks of cover, between 0.5 and 2.8 weeks; 13 of 15 are red, meaning stock is still above the reorder level.">
+      <figcaption>Figure 5. The 15 highest-revenue active products with under 4 weeks of cover. Full list of 27: <code>outputs/q5_stockout_risk.csv</code>.</figcaption>
+    </figure>
+
+    <div class="kpis">
+      <div class="kpi"><b>27 of 69</b><span>active products with under 4 weeks of cover (median 1.7 weeks)</span></div>
+      <div class="kpi"><b>$179k</b><span>of revenue over the last 13 weeks came from these 27 products</span></div>
+      <div class="kpi"><b>21 of 27</b><span>still above their reorder level, so no reorder is triggered (8 have a reorder level of 0)</span></div>
+    </div>
+
+    <h3>Main finding</h3>
+    <p class="finding">Inventory has not kept up with demand. Some of the highest-selling items, including <b>Côte de Blaye</b> ($34k in the last 13 weeks, 1.7 weeks left), <b>Raclette Courdavault</b> and <b>Camembert Pierrot</b> (0.6 weeks left), will run out within weeks. The reorder rules are part of the problem: for 21 of the 27 at-risk products, stock is still above the reorder level, and 8 of them have a reorder level of zero. Only 3 active products look overstocked (over 26 weeks of cover), with about $3.8k tied up at list price.</p>
+
+    <h3>Business implication</h3>
+    <p class="implication">Place purchase orders this week for the at-risk list, starting with the highest-revenue items. Then replace the fixed reorder levels with a demand-based rule, for example reorder when cover drops below lead time plus 2 weeks, and recalculate it every month while growth continues. Keeping popular items in stock also reduces the rush orders that cause late shipments in Question 4.</p>
+    <p class="caveat">Caveat: the dataset does not say when the stock levels were recorded or what supplier lead times are. If the snapshot predates May 1998, the true position may differ. The ranking of which products to check first still holds.</p>
+  </section>
+
+  <section class="q" id="method">
+    <div class="qnum">Data &amp; method</div>
+    <h2>How these results were produced and checked</h2>
+    <ul>
+      <li><b>Data:</b> the Northwind Database workbook supplied with the course (sheets Orders, Orders Details, Product, Customers, Employees, Shippers, Categories, Suppliers).</li>
+      <li><b>Revenue</b> uses the unit price on each order line, not the current list price in the Product sheet. The two differ on 31% of lines because prices changed over time.</li>
+      <li><b>Checks performed:</b> every order line joins to an order and a product (0 dropped rows); total net revenue = $1,265,793.04; 2 customers in the customer list never ordered; 21 orders are unshipped; discount values are stored as inexact decimals and were rounded to 2 places before grouping.</li>
+      <li><b>Reproduce:</b> <code>pip install -r requirements.txt</code> then <code>python analysis.py</code>. All figures go to <code>docs/figures/</code>, tables to <code>outputs/*.csv</code>, and headline numbers to <code>outputs/results.json</code>.</li>
+    </ul>
+    <p id="repo">Code repository: <a href="https://github.com/meganshi-418/northwind-analysis">https://github.com/meganshi-418/northwind-analysis</a></p>
+  </section>
+
+</main>
+<footer class="wrap">15.561 · HW3 · AI-assisted business data analysis of the Northwind dataset.</footer>
+</body>
+</html>

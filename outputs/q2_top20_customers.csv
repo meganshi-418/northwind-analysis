@@ -1,0 +1,21 @@
+rank,CompanyName,Country,revenue,orders,last_order,days_since_last,status
+1,QUICK-Stop,Germany,110277.0,28,1998-04-14,22,Active
+2,Ernst Handel,Austria,104875.0,30,1998-05-05,1,Active
+3,Save-a-lot Markets,USA,104362.0,31,1998-05-01,5,Active
+4,Rattlesnake Canyon Grocery,USA,51098.0,18,1998-05-06,0,Active
+5,Hungry Owl All-Night Grocers,Ireland,49980.0,19,1998-04-30,6,Active
+6,Hanari Carnes,Brazil,32841.0,14,1998-04-27,9,Active
+7,Königlich Essen,Germany,30908.0,14,1998-04-16,20,Active
+8,Folk och fä HB,Sweden,29568.0,19,1998-04-27,9,Active
+9,Mère Paillarde,Canada,28872.0,13,1997-10-30,188,At risk (>90 days)
+10,White Clover Markets,USA,27364.0,14,1998-05-01,5,Active
+11,Frankenversand,Germany,26657.0,15,1998-04-09,27,Active
+12,Queen Cozinha,Brazil,25717.0,13,1998-05-04,2,Active
+13,Berglunds snabbköp,Sweden,24928.0,18,1998-03-04,63,Active
+14,Suprêmes délices,Belgium,24089.0,12,1998-04-21,15,Active
+15,Piccolo und mehr,Austria,23129.0,10,1998-04-27,9,Active
+16,HILARIÓN-Abastos,Venezuela,22769.0,18,1998-04-28,8,Active
+17,Bon app',France,21963.0,17,1998-05-06,0,Active
+18,Bottom-Dollar Markets,Canada,20802.0,14,1998-04-24,12,Active
+19,Richter Supermarkt,Switzerland,19344.0,10,1998-05-06,0,Active
+20,Lehmanns Marktstand,Germany,19261.0,15,1998-05-05,1,Active

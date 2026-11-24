@@ -1,0 +1,433 @@
+{
+  "data_checks": {
+    "orders": 830,
+    "order_lines": 2155,
+    "customers_in_master": 91,
+    "customers_with_orders": 89,
+    "first_order": "1996-07-04",
+    "last_order": "1998-05-06",
+    "unshipped_orders": 21,
+    "lines_missing_product_or_order": 0,
+    "total_revenue": 1265793.04
+  },
+  "q1_markets": {
+    "jan_apr_1997": 191322,
+    "jan_apr_1998": 422290,
+    "growth_pct": 120.7,
+    "top_gainers": {
+      "USA": 53190,
+      "Germany": 47407,
+      "Brazil": 31712
+    },
+    "top3_share_of_growth_pct": 57.3,
+    "decliners": {
+      "Denmark": -9422,
+      "Canada": -3685,
+      "Mexico": -3080,
+      "Finland": -1875
+    }
+  },
+  "q2_customers": {
+    "n_customers": 89,
+    "top10_share_pct": 45.0,
+    "top20_share_pct": 63.1,
+    "median_days_between_orders": 35.0,
+    "at_risk": [
+      {
+        "company": "M\u00e8re Paillarde",
+        "country": "Canada",
+        "revenue": 28872,
+        "days_since_last": 188
+      }
+    ],
+    "at_risk_revenue": 28872,
+    "at_risk_share_pct": 2.3,
+    "lapsed_all_count": 16,
+    "lapsed_all_revenue": 114179,
+    "lapsed_all_share_pct": 9.0
+  },
+  "q3_discounts": {
+    "share_lines_discounted_pct": 38.9,
+    "total_discount_given": 88666,
+    "discount_pct_of_gross": 6.5,
+    "avg_qty_lift_any_discount_pct": 33.4,
+    "lift_by_level_pct": {
+      "5%": 33.0,
+      "10%": 26.0,
+      "15%": 35.9,
+      "20%": 31.8,
+      "25%": 41.4
+    },
+    "savings_if_capped_at_5pct": 58484
+  },
+  "q4_fulfilment": {
+    "shipped_orders": 809,
+    "unshipped_orders": 21,
+    "overall_late_rate_pct": 4.6,
+    "late_by_shipper_pct": {
+      "United Package": 5.1,
+      "Speedy Express": 4.9,
+      "Federal Shipping": 3.6
+    },
+    "late_by_window_pct": {
+      "14": 17.6,
+      "28": 3.7,
+      "42": 0.0
+    },
+    "rush_orders": 68,
+    "rush_share_of_late_pct": 32.4,
+    "worst_employee_late_count": 4,
+    "worst_employee_rush_share_pct": 14.3,
+    "company_rush_share_pct": 8.4,
+    "worst_employee": "Anne Dodsworth",
+    "worst_employee_late_pct": 9.5,
+    "worst_employee_orders": 42,
+    "late_order_value": 66536,
+    "median_days_to_ship_late": 30.0,
+    "median_days_to_ship_ontime": 7.0
+  },
+  "q5_inventory": {
+    "silent_stockout_count": 21,
+    "zero_reorder_level_in_risk": 8,
+    "median_cover_risk_wks": 1.7,
+    "active_products": 69,
+    "stockout_risk_count": 27,
+    "stockout_risk_recent_revenue": 178713,
+    "stockout_out_of_stock_now": 0,
+    "stockout_products": [
+      "C\u00f4te de Blaye",
+      "Raclette Courdavault",
+      "Camembert Pierrot",
+      "Uncle Bob's Organic Dried Pears",
+      "Tarte au sucre",
+      "Manjimup Dried Apples",
+      "Vegie-spread",
+      "Fl\u00f8temysost",
+      "Ipoh Coffee",
+      "Ikura",
+      "Lakkalik\u00f6\u00f6ri",
+      "Chang",
+      "Mozzarella di Giovanni",
+      "Gudbrandsdalsost",
+      "Pavlova",
+      "Chai",
+      "Northwoods Cranberry Sauce",
+      "Nord-Ost Matjeshering",
+      "Konbu",
+      "Original Frankfurter gr\u00fcne So\u00dfe",
+      "Sir Rodney's Scones",
+      "Steeleye Stout",
+      "Gumb\u00e4r Gummib\u00e4rchen",
+      "Scottish Longbreads",
+      "Outback Lager",
+      "Teatime Chocolate Biscuits",
+      "Tourti\u00e8re"
+    ],
+    "overstock_count": 3,
+    "overstock_value_at_list": 3767,
+    "overstock_top": [
+      "Gustaf's Kn\u00e4ckebr\u00f6d",
+      "R\u00f6d Kaviar",
+      "Louisiana Hot Spiced Okra"
+    ],
+    "urgent_table": [
+      {
+        "ProductName": "C\u00f4te de Blaye",
+        "UnitsInStock": 17,
+        "UnitsOnOrder": 0,
+        "ReorderLevel": 15,
+        "weekly_demand": 10.0,
+        "cover_on_hand_wks": 1.7,
+        "cover_incl_onorder_wks": 1.7,
+        "recent_13wk_revenue": 34255.0,
+        "stock_value": 4479.5
+      },
+      {
+        "ProductName": "Raclette Courdavault",
+        "UnitsInStock": 79,
+        "UnitsOnOrder": 0,
+        "ReorderLevel": 0,
+        "weekly_demand": 28.2,
+        "cover_on_hand_wks": 2.8,
+        "cover_incl_onorder_wks": 2.8,
+        "recent_13wk_revenue": 18595.5,
+        "stock_value": 4345.0
+      },
+      {
+        "ProductName": "Camembert Pierrot",
+        "UnitsInStock": 19,
+        "UnitsOnOrder": 0,
+        "ReorderLevel": 0,
+        "weekly_demand": 29.7,
+        "cover_on_hand_wks": 0.6,
+        "cover_incl_onorder_wks": 0.6,
+        "recent_13wk_revenue": 12297.1,
+        "stock_value": 646.0
+      },
+      {
+        "ProductName": "Uncle Bob's Organic Dried Pears",
+        "UnitsInStock": 15,
+        "UnitsOnOrder": 0,
+        "ReorderLevel": 10,
+        "weekly_demand": 29.9,
+        "cover_on_hand_wks": 0.5,
+        "cover_incl_onorder_wks": 0.5,
+        "recent_13wk_revenue": 11616.0,
+        "stock_value": 450.0
+      },
+      {
+        "ProductName": "Tarte au sucre",
+        "UnitsInStock": 17,
+        "UnitsOnOrder": 0,
+        "ReorderLevel": 0,
+        "weekly_demand": 19.2,
+        "cover_on_hand_wks": 0.9,
+        "cover_incl_onorder_wks": 0.9,
+        "recent_13wk_revenue": 11247.8,
+        "stock_value": 838.1
+      },
+      {
+        "ProductName": "Manjimup Dried Apples",
+        "UnitsInStock": 20,
+        "UnitsOnOrder": 0,
+        "ReorderLevel": 10,
+        "weekly_demand": 15.9,
+        "cover_on_hand_wks": 1.3,
+        "cover_incl_onorder_wks": 1.3,
+        "recent_13wk_revenue": 10348.2,
+        "stock_value": 1060.0
+      },
+      {
+        "ProductName": "Vegie-spread",
+        "UnitsInStock": 24,
+        "UnitsOnOrder": 0,
+        "ReorderLevel": 5,
+        "weekly_demand": 11.3,
+        "cover_on_hand_wks": 2.1,
+        "cover_incl_onorder_wks": 2.1,
+        "recent_13wk_revenue": 6453.3,
+        "stock_value": 1053.6
+      },
+      {
+        "ProductName": "Fl\u00f8temysost",
+        "UnitsInStock": 26,
+        "UnitsOnOrder": 0,
+        "ReorderLevel": 0,
+        "weekly_demand": 22.1,
+        "cover_on_hand_wks": 1.2,
+        "cover_incl_onorder_wks": 1.2,
+        "recent_13wk_revenue": 5917.9,
+        "stock_value": 559.0
+      },
+      {
+        "ProductName": "Ipoh Coffee",
+        "UnitsInStock": 17,
+        "UnitsOnOrder": 10,
+        "ReorderLevel": 25,
+        "weekly_demand": 11.2,
+        "cover_on_hand_wks": 1.5,
+        "cover_incl_onorder_wks": 2.4,
+        "recent_13wk_revenue": 5777.6,
+        "stock_value": 782.0
+      },
+      {
+        "ProductName": "Ikura",
+        "UnitsInStock": 31,
+        "UnitsOnOrder": 0,
+        "ReorderLevel": 0,
+        "weekly_demand": 13.8,
+        "cover_on_hand_wks": 2.2,
+        "cover_incl_onorder_wks": 2.2,
+        "recent_13wk_revenue": 5406.4,
+        "stock_value": 961.0
+      },
+      {
+        "ProductName": "Lakkalik\u00f6\u00f6ri",
+        "UnitsInStock": 57,
+        "UnitsOnOrder": 0,
+        "ReorderLevel": 20,
+        "weekly_demand": 22.8,
+        "cover_on_hand_wks": 2.5,
+        "cover_incl_onorder_wks": 2.5,
+        "recent_13wk_revenue": 4926.6,
+        "stock_value": 1026.0
+      },
+      {
+        "ProductName": "Chang",
+        "UnitsInStock": 17,
+        "UnitsOnOrder": 40,
+        "ReorderLevel": 25,
+        "weekly_demand": 24.1,
+        "cover_on_hand_wks": 0.7,
+        "cover_incl_onorder_wks": 2.4,
+        "recent_13wk_revenue": 4872.5,
+        "stock_value": 323.0
+      },
+      {
+        "ProductName": "Mozzarella di Giovanni",
+        "UnitsInStock": 14,
+        "UnitsOnOrder": 0,
+        "ReorderLevel": 0,
+        "weekly_demand": 10.6,
+        "cover_on_hand_wks": 1.3,
+        "cover_incl_onorder_wks": 1.3,
+        "recent_13wk_revenue": 4802.4,
+        "stock_value": 487.2
+      },
+      {
+        "ProductName": "Gudbrandsdalsost",
+        "UnitsInStock": 26,
+        "UnitsOnOrder": 0,
+        "ReorderLevel": 15,
+        "weekly_demand": 10.4,
+        "cover_on_hand_wks": 2.5,
+        "cover_incl_onorder_wks": 2.5,
+        "recent_13wk_revenue": 4640.4,
+        "stock_value": 936.0
+      },
+      {
+        "ProductName": "Pavlova",
+        "UnitsInStock": 29,
+        "UnitsOnOrder": 0,
+        "ReorderLevel": 10,
+        "weekly_demand": 21.9,
+        "cover_on_hand_wks": 1.3,
+        "cover_incl_onorder_wks": 1.3,
+        "recent_13wk_revenue": 4551.7,
+        "stock_value": 506.0
+      },
+      {
+        "ProductName": "Chai",
+        "UnitsInStock": 39,
+        "UnitsOnOrder": 0,
+        "ReorderLevel": 10,
+        "weekly_demand": 19.6,
+        "cover_on_hand_wks": 2.0,
+        "cover_incl_onorder_wks": 2.0,
+        "recent_13wk_revenue": 4063.5,
+        "stock_value": 702.0
+      },
+      {
+        "ProductName": "Northwoods Cranberry Sauce",
+        "UnitsInStock": 6,
+        "UnitsOnOrder": 0,
+        "ReorderLevel": 0,
+        "weekly_demand": 7.5,
+        "cover_on_hand_wks": 0.8,
+        "cover_incl_onorder_wks": 0.8,
+        "recent_13wk_revenue": 3792.0,
+        "stock_value": 240.0
+      },
+      {
+        "ProductName": "Nord-Ost Matjeshering",
+        "UnitsInStock": 10,
+        "UnitsOnOrder": 0,
+        "ReorderLevel": 15,
+        "weekly_demand": 10.5,
+        "cover_on_hand_wks": 1.0,
+        "cover_incl_onorder_wks": 1.0,
+        "recent_13wk_revenue": 3475.7,
+        "stock_value": 258.9
+      },
+      {
+        "ProductName": "Konbu",
+        "UnitsInStock": 24,
+        "UnitsOnOrder": 0,
+        "ReorderLevel": 5,
+        "weekly_demand": 43.7,
+        "cover_on_hand_wks": 0.5,
+        "cover_incl_onorder_wks": 0.5,
+        "recent_13wk_revenue": 3241.2,
+        "stock_value": 144.0
+      },
+      {
+        "ProductName": "Original Frankfurter gr\u00fcne So\u00dfe",
+        "UnitsInStock": 32,
+        "UnitsOnOrder": 0,
+        "ReorderLevel": 15,
+        "weekly_demand": 18.8,
+        "cover_on_hand_wks": 1.7,
+        "cover_incl_onorder_wks": 1.7,
+        "recent_13wk_revenue": 3103.7,
+        "stock_value": 416.0
+      },
+      {
+        "ProductName": "Sir Rodney's Scones",
+        "UnitsInStock": 3,
+        "UnitsOnOrder": 40,
+        "ReorderLevel": 5,
+        "weekly_demand": 23.9,
+        "cover_on_hand_wks": 0.1,
+        "cover_incl_onorder_wks": 1.8,
+        "recent_13wk_revenue": 3015.0,
+        "stock_value": 30.0
+      },
+      {
+        "ProductName": "Steeleye Stout",
+        "UnitsInStock": 20,
+        "UnitsOnOrder": 0,
+        "ReorderLevel": 15,
+        "weekly_demand": 12.8,
+        "cover_on_hand_wks": 1.6,
+        "cover_incl_onorder_wks": 1.6,
+        "recent_13wk_revenue": 2949.3,
+        "stock_value": 360.0
+      },
+      {
+        "ProductName": "Gumb\u00e4r Gummib\u00e4rchen",
+        "UnitsInStock": 15,
+        "UnitsOnOrder": 0,
+        "ReorderLevel": 0,
+        "weekly_demand": 6.6,
+        "cover_on_hand_wks": 2.3,
+        "cover_incl_onorder_wks": 2.3,
+        "recent_13wk_revenue": 2685.8,
+        "stock_value": 468.4
+      },
+      {
+        "ProductName": "Scottish Longbreads",
+        "UnitsInStock": 6,
+        "UnitsOnOrder": 10,
+        "ReorderLevel": 15,
+        "weekly_demand": 16.7,
+        "cover_on_hand_wks": 0.4,
+        "cover_incl_onorder_wks": 1.0,
+        "recent_13wk_revenue": 2462.5,
+        "stock_value": 75.0
+      },
+      {
+        "ProductName": "Outback Lager",
+        "UnitsInStock": 15,
+        "UnitsOnOrder": 10,
+        "ReorderLevel": 30,
+        "weekly_demand": 11.7,
+        "cover_on_hand_wks": 1.3,
+        "cover_incl_onorder_wks": 2.1,
+        "recent_13wk_revenue": 2022.7,
+        "stock_value": 225.0
+      },
+      {
+        "ProductName": "Teatime Chocolate Biscuits",
+        "UnitsInStock": 25,
+        "UnitsOnOrder": 0,
+        "ReorderLevel": 5,
+        "weekly_demand": 14.8,
+        "cover_on_hand_wks": 1.7,
+        "cover_incl_onorder_wks": 1.7,
+        "recent_13wk_revenue": 1729.6,
+        "stock_value": 230.0
+      },
+      {
+        "ProductName": "Tourti\u00e8re",
+        "UnitsInStock": 21,
+        "UnitsOnOrder": 0,
+        "ReorderLevel": 10,
+        "weekly_demand": 5.5,
+        "cover_on_hand_wks": 3.8,
+        "cover_incl_onorder_wks": 3.8,
+        "recent_13wk_revenue": 463.4,
+        "stock_value": 156.5
+      }
+    ]
+  }
+}
